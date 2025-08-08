@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Test - Principal Accountant General</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Functionality Test</h1>
+        
+        <div class="test-section">
+            <h2>Authentication Test</h2>
+            <button onclick="testLogin()">Test Login</button>
+            <button onclick="testLogout()">Test Logout</button>
+            <div id="authResult"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Dashboard Data Test</h2>
+            <button onclick="testDashboard()">Test Dashboard Data</button>
+            <div id="dashboardResult"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Applications Test</h2>
+            <button onclick="testApplications()">Test Applications</button>
+            <div id="applicationsResult"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Contacts Test</h2>
+            <button onclick="testContacts()">Test Contacts</button>
+            <div id="contactsResult"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Export Test</h2>
+            <button onclick="testExport()">Test Export</button>
+            <div id="exportResult"></div>
+        </div>
+    </div>
+
+    <script>
+        // Test login functionality
+        async function testLogin() {
+            const resultDiv = document.getElementById('authResult');
+            resultDiv.innerHTML = 'Testing login...';
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: 'admin',
+                        password: 'admin123'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('adminToken', data.token);
+                    resultDiv.innerHTML = `<div class="message success">Login successful! Token: ${data.token.substring(0, 20)}...</div>`;
+                } else {
+                    resultDiv.innerHTML = `<div class="message error">Login failed: ${data.message}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="message error">Error: ${error.message}</div>`;
+            }
+        }
+        
+        // Test logout functionality
+        function testLogout() {
+            const resultDiv = document.getElementById('authResult');
+            localStorage.removeItem('adminToken');
+            resultDiv.innerHTML = '<div class="message success">Logged out successfully!</div>';
+        }
+        
+        // Test dashboard data
+        async function testDashboard() {
+            const resultDiv = document.getElementById('dashboardResult');
+            resultDiv.innerHTML = 'Testing dashboard data...';
+            
+            try {
+                const token = localStorage.getItem('adminToken');
+                if (!token) {
+                    resultDiv.innerHTML = '<div class="message error">No token found. Please login first.</div>';
+                    return;
+                }
+                
+                const response = await fetch('/api/admin/dashboard', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="message success">
+                            Dashboard data loaded successfully!<br>
+                            Pension Applications: ${data.statistics.pension.total}<br>
+                            Family Pension Applications: ${data.statistics.familyPension.total}<br>
+                            Contact Messages: ${data.statistics.contact.total}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="message error">Dashboard failed: ${data.message}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="message error">Error: ${error.message}</div>`;
+            }
+        }
+        
+        // Test applications
+        async function testApplications() {
+            const resultDiv = document.getElementById('applicationsResult');
+            resultDiv.innerHTML = 'Testing applications...';
+            
+            try {
+                const token = localStorage.getItem('adminToken');
+                if (!token) {
+                    resultDiv.innerHTML = '<div class="message error">No token found. Please login first.</div>';
+                    return;
+                }
+                
+                const [pensionResponse, familyResponse] = await Promise.all([
+                    fetch('/api/admin/applications/pension', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    }),
+                    fetch('/api/admin/applications/family-pension', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    })
+                ]);
+                
+                const pensionData = await pensionResponse.json();
+                const familyData = await familyResponse.json();
+                
+                if (pensionResponse.ok && familyResponse.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="message success">
+                            Applications loaded successfully!<br>
+                            Pension Applications: ${pensionData.length}<br>
+                            Family Pension Applications: ${familyData.length}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = '<div class="message error">Failed to load applications</div>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="message error">Error: ${error.message}</div>`;
+            }
+        }
+        
+        // Test contacts
+        async function testContacts() {
+            const resultDiv = document.getElementById('contactsResult');
+            resultDiv.innerHTML = 'Testing contacts...';
+            
+            try {
+                const token = localStorage.getItem('adminToken');
+                if (!token) {
+                    resultDiv.innerHTML = '<div class="message error">No token found. Please login first.</div>';
+                    return;
+                }
+                
+                const response = await fetch('/api/admin/applications/contact', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="message success">
+                            Contacts loaded successfully!<br>
+                            Total Contacts: ${data.length}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="message error">Contacts failed: ${data.message}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="message error">Error: ${error.message}</div>`;
+            }
+        }
+        
+        // Test export
+        async function testExport() {
+            const resultDiv = document.getElementById('exportResult');
+            resultDiv.innerHTML = 'Testing export...';
+            
+            try {
+                const token = localStorage.getItem('adminToken');
+                if (!token) {
+                    resultDiv.innerHTML = '<div class="message error">No token found. Please login first.</div>';
+                    return;
+                }
+                
+                const response = await fetch('/api/admin/export', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `test-export-${new Date().toISOString().split('T')[0]}.csv`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                    
+                    resultDiv.innerHTML = '<div class="message success">Export successful! File downloaded.</div>';
+                } else {
+                    const data = await response.json();
+                    resultDiv.innerHTML = `<div class="message error">Export failed: ${data.message}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="message error">Error: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>

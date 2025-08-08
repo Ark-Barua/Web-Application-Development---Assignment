@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Principal Accountant General (A&E) - I, Maharashtra, Mumbai</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="top-bar">
+            <div class="container">
+                <div class="top-left">
+                    <a href="index.html">Main Site</a>
+                    <a href="#">e-Office</a>
+                    <a href="#">APAR-Sr.AO</a>
+                    <a href="#">eHRMS 2.0</a>
+                    <a href="#">FAQ</a>
+                    <a href="#">CPGRAMS</a>
+                </div>
+                <div class="top-right">
+                    <a href="#main-content">Skip to Main Content</a>
+                    <button class="font-size-btn" data-size="small">A-</button>
+                    <button class="font-size-btn active" data-size="normal">A</button>
+                    <button class="font-size-btn" data-size="large">A+</button>
+                    <select class="language-select">
+                        <option value="english">English</option>
+                        <option value="hindi">हिंदी</option>
+                        <option value="marathi">मराठी</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo-left">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Emblem_of_India.svg" alt="Emblem of India" class="emblem">
+                    </div>
+                    <div class="header-text">
+                        <h1>Principal Accountant General (A&E) - I, Maharashtra, Mumbai</h1>
+                        <p>Indian Audit & Accounts Department - Admin Panel</p>
+                    </div>
+                    <div class="logo-right">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Emblem_of_India.svg" alt="Government Seal" class="seal">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Admin Navigation -->
+    <nav class="admin-nav">
+        <div class="container">
+            <div class="admin-nav-content">
+                <div class="admin-user">
+                    <i class="fas fa-user-shield"></i>
+                    <span id="adminUsername">Admin User</span>
+                </div>
+                <ul class="admin-menu">
+                    <li><a href="#dashboard" class="active" data-tab="dashboard">Dashboard</a></li>
+                    <li><a href="#applications" data-tab="applications">Applications</a></li>
+                    <li><a href="#contacts" data-tab="contacts">Contacts</a></li>
+                    <li><a href="#reports" data-tab="reports">Reports</a></li>
+                    <li><a href="#settings" data-tab="settings">Settings</a></li>
+                    <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content" class="admin-main">
+        <div class="container">
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <div class="dashboard-header">
+                    <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+                    <p>Welcome to the Admin Panel. Here's an overview of all applications and activities.</p>
+                </div>
+
+                <!-- Statistics Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalPensionApps">0</h3>
+                            <p>Total Pension Applications</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalFamilyPensionApps">0</h3>
+                            <p>Family Pension Applications</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalContacts">0</h3>
+                            <p>Contact Messages</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="pendingApps">0</h3>
+                            <p>Pending Applications</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="charts-section">
+                    <div class="chart-container">
+                        <h3>Application Status Distribution</h3>
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h3>Applications Over Time (Last 6 Months)</h3>
+                        <canvas id="timeChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="recent-activity">
+                    <h3>Recent Applications</h3>
+                    <div class="activity-tabs">
+                        <button class="activity-tab active" data-type="pension">Pension Applications</button>
+                        <button class="activity-tab" data-type="family-pension">Family Pension Applications</button>
+                        <button class="activity-tab" data-type="contacts">Contact Messages</button>
+                    </div>
+                    
+                    <div class="activity-content">
+                        <div id="recentPensionApps" class="activity-list active">
+                            <!-- Recent pension applications will be loaded here -->
+                        </div>
+                        
+                        <div id="recentFamilyPensionApps" class="activity-list">
+                            <!-- Recent family pension applications will be loaded here -->
+                        </div>
+                        
+                        <div id="recentContacts" class="activity-list">
+                            <!-- Recent contact messages will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Applications Tab -->
+            <div id="applications" class="tab-content">
+                <div class="tab-header">
+                    <h2><i class="fas fa-file-alt"></i> Applications Management</h2>
+                    <div class="tab-actions">
+                        <button class="btn btn-primary" id="exportBtn">
+                            <i class="fas fa-download"></i> Export Data
+                        </button>
+                    </div>
+                </div>
+
+                <div class="applications-tabs">
+                    <button class="app-tab active" data-app-type="pension">Pension Applications</button>
+                    <button class="app-tab" data-app-type="family-pension">Family Pension Applications</button>
+                </div>
+
+                <div class="applications-content">
+                    <div id="pensionApplications" class="app-list active">
+                        <!-- Pension applications table will be loaded here -->
+                    </div>
+                    
+                    <div id="familyPensionApplications" class="app-list">
+                        <!-- Family pension applications table will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contacts Tab -->
+            <div id="contacts" class="tab-content">
+                <div class="tab-header">
+                    <h2><i class="fas fa-envelope"></i> Contact Messages</h2>
+                </div>
+
+                <div class="contacts-filters">
+                    <select id="statusFilter">
+                        <option value="">All Status</option>
+                        <option value="unread">Unread</option>
+                        <option value="read">Read</option>
+                        <option value="replied">Replied</option>
+                    </select>
+                    
+                    <input type="text" id="searchContacts" placeholder="Search contacts...">
+                </div>
+
+                <div id="contactsList" class="contacts-list">
+                    <!-- Contact messages will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div id="reports" class="tab-content">
+                <div class="tab-header">
+                    <h2><i class="fas fa-chart-bar"></i> Reports & Analytics</h2>
+                </div>
+
+                <div class="reports-grid">
+                    <div class="report-card">
+                        <h3>Monthly Report</h3>
+                        <p>Generate monthly application statistics</p>
+                        <button class="btn btn-primary">Generate Report</button>
+                    </div>
+                    
+                    <div class="report-card">
+                        <h3>Status Report</h3>
+                        <p>Application status distribution</p>
+                        <button class="btn btn-primary">Generate Report</button>
+                    </div>
+                    
+                    <div class="report-card">
+                        <h3>Performance Report</h3>
+                        <p>Processing time and efficiency metrics</p>
+                        <button class="btn btn-primary">Generate Report</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings" class="tab-content">
+                <div class="tab-header">
+                    <h2><i class="fas fa-cog"></i> Settings</h2>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Admin Account</h3>
+                    <form id="adminSettingsForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="adminUsername">Username</label>
+                                <input type="text" id="adminUsername" class="form-control" value="admin">
+                            </div>
+                            <div class="form-group">
+                                <label for="adminEmail">Email</label>
+                                <input type="email" id="adminEmail" class="form-control" value="admin@pagmumbai.gov.in">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="newPassword">New Password</label>
+                                <input type="password" id="newPassword" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm Password</label>
+                                <input type="password" id="confirmPassword" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Update Settings</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-sign-in-alt"></i> Admin Login</h2>
+                <span class="close">&times;</span>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginUsername">Username</label>
+                    <input type="text" id="loginUsername" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" class="form-control" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
