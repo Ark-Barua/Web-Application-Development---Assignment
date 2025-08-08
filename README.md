@@ -111,6 +111,8 @@ NODE_ENV=production
 npm install --production
 npm start
 ```
+## Live Demo
+[Live](https://web-application-development-assignment.onrender.com/)
 
 ## Contributing
 Fork, branch, commit, test, pull request.
@@ -130,3 +132,4 @@ In Progress: Performance, new admin features, reporting
 ## Last Updated: August 2025 - Version: 1.0.0 - Maintainer: Ark
 
 ## Feedback and contributions welcome!
+
